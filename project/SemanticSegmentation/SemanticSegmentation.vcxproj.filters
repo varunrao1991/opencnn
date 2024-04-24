@@ -1,0 +1,267 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClInclude Include="bmpreader.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="csvReader.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="globalContext.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="graph.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="IGraph.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="layerContext.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="layerFactory.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="layer.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="logger.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="numpy.hpp">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="openclwrapper.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="SemanticSegmentationAPI.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="LayerContext.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="LinkedList.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="Layer.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="IGlobalContext.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="add.h">
+      <Filter>include\Layers</Filter>
+    </ClInclude>
+    <ClInclude Include="argmax.h">
+      <Filter>include\Layers</Filter>
+    </ClInclude>
+    <ClInclude Include="batchNormalization.h">
+      <Filter>include\Layers</Filter>
+    </ClInclude>
+    <ClInclude Include="concatenation.h">
+      <Filter>include\Layers</Filter>
+    </ClInclude>
+    <ClInclude Include="convolutionLayer.h">
+      <Filter>include\Layers</Filter>
+    </ClInclude>
+    <ClInclude Include="convolutionLayerBias.h">
+      <Filter>include\Layers</Filter>
+    </ClInclude>
+    <ClInclude Include="deconvolutionLayer.h">
+      <Filter>include\Layers</Filter>
+    </ClInclude>
+    <ClInclude Include="deconvolutionLayer3X3.h">
+      <Filter>include\Layers</Filter>
+    </ClInclude>
+    <ClInclude Include="depthwiseConvolutionBiasLayer.h">
+      <Filter>include\Layers</Filter>
+    </ClInclude>
+    <ClInclude Include="depthwiseConvolutionLayer.h">
+      <Filter>include\Layers</Filter>
+    </ClInclude>
+    <ClInclude Include="pointwiseConvolutionLayer.h">
+      <Filter>include\Layers</Filter>
+    </ClInclude>
+    <ClInclude Include="pointwiseConvolutionLayerBias.h">
+      <Filter>include\Layers</Filter>
+    </ClInclude>
+    <ClInclude Include="padding.h">
+      <Filter>include\Layers</Filter>
+    </ClInclude>
+    <ClInclude Include="relu.h">
+      <Filter>include\Layers</Filter>
+    </ClInclude>
+    <ClInclude Include="sigmoidLayer.h">
+      <Filter>include\Layers</Filter>
+    </ClInclude>
+    <ClInclude Include="maxpool.h">
+      <Filter>include\Layers</Filter>
+    </ClInclude>
+    <ClInclude Include="input.h">
+      <Filter>include\Layers</Filter>
+    </ClInclude>
+    <ClInclude Include="batchNormalization2.h">
+      <Filter>include\Layers</Filter>
+    </ClInclude>
+    <ClInclude Include="softmax.h">
+      <Filter>include\Layers</Filter>
+    </ClInclude>
+    <ClInclude Include="ssdDecoder.h">
+      <Filter>include\Layers</Filter>
+    </ClInclude>
+    <ClInclude Include="batchNormalization1.h">
+      <Filter>include\Layers</Filter>
+    </ClInclude>
+    <ClInclude Include="leakyrelu.h">
+      <Filter>include\Layers</Filter>
+    </ClInclude>
+    <ClInclude Include="imageResize.h">
+      <Filter>include\Layers</Filter>
+    </ClInclude>
+    <ClInclude Include="yoloDecoder.h">
+      <Filter>include\Layers</Filter>
+    </ClInclude>
+    <ClInclude Include="yoloSeperateDecoder.h">
+      <Filter>include\Layers</Filter>
+    </ClInclude>
+    <ClInclude Include="ILayerContext.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="dataContainerOpenCLFloat.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="dataContainerBase.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="dataContainerFloat.h">
+      <Filter>include</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="bmpreader.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="csvReader.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="globalContext.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="graph.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="layerContext.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="layerFactory.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="layer.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="logger.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="openclwrapper.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="SemanticSegmentationAPI.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="add.cpp">
+      <Filter>src\Layers</Filter>
+    </ClCompile>
+    <ClCompile Include="argmax.cpp">
+      <Filter>src\Layers</Filter>
+    </ClCompile>
+    <ClCompile Include="batchNormalization.cpp">
+      <Filter>src\Layers</Filter>
+    </ClCompile>
+    <ClCompile Include="concatenation.cpp">
+      <Filter>src\Layers</Filter>
+    </ClCompile>
+    <ClCompile Include="convolutionLayer.cpp">
+      <Filter>src\Layers</Filter>
+    </ClCompile>
+    <ClCompile Include="convolutionLayerBias.cpp">
+      <Filter>src\Layers</Filter>
+    </ClCompile>
+    <ClCompile Include="deconvolutionLayer.cpp">
+      <Filter>src\Layers</Filter>
+    </ClCompile>
+    <ClCompile Include="deconvolutionLayer3X3.cpp">
+      <Filter>src\Layers</Filter>
+    </ClCompile>
+    <ClCompile Include="depthwiseConvolutionBiasLayer.cpp">
+      <Filter>src\Layers</Filter>
+    </ClCompile>
+    <ClCompile Include="depthwiseConvolutionLayer.cpp">
+      <Filter>src\Layers</Filter>
+    </ClCompile>
+    <ClCompile Include="input.cpp">
+      <Filter>src\Layers</Filter>
+    </ClCompile>
+    <ClCompile Include="pointwiseConvolutionLayer.cpp">
+      <Filter>src\Layers</Filter>
+    </ClCompile>
+    <ClCompile Include="pointwiseConvolutionLayerBias.cpp">
+      <Filter>src\Layers</Filter>
+    </ClCompile>
+    <ClCompile Include="padding.cpp">
+      <Filter>src\Layers</Filter>
+    </ClCompile>
+    <ClCompile Include="maxpool.cpp">
+      <Filter>src\Layers</Filter>
+    </ClCompile>
+    <ClCompile Include="relu.cpp">
+      <Filter>src\Layers</Filter>
+    </ClCompile>
+    <ClCompile Include="sigmoidLayer.cpp">
+      <Filter>src\Layers</Filter>
+    </ClCompile>
+    <ClCompile Include="batchNormalization2.cpp">
+      <Filter>src\Layers</Filter>
+    </ClCompile>
+    <ClCompile Include="softmax.cpp">
+      <Filter>src\Layers</Filter>
+    </ClCompile>
+    <ClCompile Include="ssdDecoder.cpp">
+      <Filter>src\Layers</Filter>
+    </ClCompile>
+    <ClCompile Include="batchNormalization1.cpp">
+      <Filter>src\Layers</Filter>
+    </ClCompile>
+    <ClCompile Include="leakyrelu.cpp">
+      <Filter>src\Layers</Filter>
+    </ClCompile>
+    <ClCompile Include="imageResize.cpp">
+      <Filter>src\Layers</Filter>
+    </ClCompile>
+    <ClCompile Include="yoloDecoder.cpp">
+      <Filter>src\Layers</Filter>
+    </ClCompile>
+    <ClCompile Include="yoloSeperateDecoder.cpp">
+      <Filter>src\Layers</Filter>
+    </ClCompile>
+    <ClCompile Include="dataContainerOpenCLFloat.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="dataContainerFloat.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="src">
+      <UniqueIdentifier>{e1ba7491-2ba2-498a-8554-0f6b55c73cfd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include">
+      <UniqueIdentifier>{ea7873f5-29e1-450f-9150-245e1b144df8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\Layers">
+      <UniqueIdentifier>{3592fa67-6a9f-4634-957f-fe5a6847b07e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Layers">
+      <UniqueIdentifier>{506b00d6-8e61-4d7a-abf7-cb94e08d531b}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>
