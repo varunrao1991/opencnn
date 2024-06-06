@@ -55,9 +55,7 @@ void ConvolutionLayer::SetKernelArguments()
     m_dimension = 3;
     m_globalSize[0] = m_outputSize[0];
     m_globalSize[1] = m_outputSize[1];
-
-    const bool kDivisibility = m_filterSize[3] % 16 == 0;
-    m_globalSize[2] = kDivisibility ? m_filterSize[3] / 16 : m_filterSize[3] / 2;
+    m_globalSize[2] = (m_filterSize[3] + 15) / 16;
 
     if (m_src.size() != 2)
     {
@@ -78,7 +76,6 @@ void ConvolutionLayer::SetKernelArguments()
     clSetKernelArg(m_kernels[0], argCnt++, sizeof(uint32_t), &m_filterSize[2]);
     clSetKernelArg(m_kernels[0], argCnt++, sizeof(uint32_t), &m_filterSize[3]);
     clSetKernelArg(m_kernels[0], argCnt++, sizeof(uint32_t), &m_stride);
-    clSetKernelArg(m_kernels[0], argCnt++, sizeof(cl_char), &kDivisibility);
     clSetKernelArg(m_kernels[0], argCnt++, sizeof(cl_char), &m_enableRelu);
 }
 void ConvolutionLayer::CreateBuffers(const std::vector<std::shared_ptr<DataContainerOpenCLFloat>> &src)
@@ -90,8 +87,7 @@ void ConvolutionLayer::CreateBuffers(const std::vector<std::shared_ptr<DataConta
             std::vector{ m_filterSize[0], m_filterSize[1], m_filterSize[2], m_filterSize[3] });
         mem->Allocate(m_openclWrapper->m_context);
         m_src.push_back(mem);
-        mem = std::make_shared<DataContainerOpenCLFloat>(
-            std::vector{ m_inputSize[0], m_inputSize[1], m_inputSize[2] });
+        mem = std::make_shared<DataContainerOpenCLFloat>(std::vector{ m_inputSize[0], m_inputSize[1], m_inputSize[2] });
         mem->Allocate(m_openclWrapper->m_context);
         m_src.push_back(mem);
     }
@@ -108,8 +104,8 @@ void ConvolutionLayer::CreateBuffers(const std::vector<std::shared_ptr<DataConta
     }
     if (m_dest.empty())
     {
-        auto mem = std::make_shared<DataContainerOpenCLFloat>(
-            std::vector{ m_inputSize[0], m_inputSize[1], m_filterSize[3] });
+        auto mem =
+            std::make_shared<DataContainerOpenCLFloat>(std::vector{ m_inputSize[0], m_inputSize[1], m_filterSize[3] });
         mem->Allocate(m_openclWrapper->m_context);
         m_dest.push_back(mem);
     }

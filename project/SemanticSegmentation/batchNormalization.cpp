@@ -42,7 +42,7 @@ void BatchNormalization::SetKernelArguments()
     m_dimension = 3;
     m_globalSize[0] = m_inputSize[0];
     m_globalSize[1] = m_inputSize[1];
-    m_globalSize[2] = m_inputSize[2] / 8;
+    m_globalSize[2] = (m_inputSize[2] + 15) / 16;
 
     if (m_src.size() != 3)
     {
@@ -75,8 +75,7 @@ void BatchNormalization::CreateBuffers(const std::vector<std::shared_ptr<DataCon
         mem = std::make_shared<DataContainerOpenCLFloat>(m_inputSize[2]);
         mem->Allocate(m_openclWrapper->m_context);
         m_src.push_back(mem);
-        mem = std::make_shared<DataContainerOpenCLFloat>(
-            std::vector{ m_inputSize[0], m_inputSize[1], m_inputSize[2] });
+        mem = std::make_shared<DataContainerOpenCLFloat>(std::vector{ m_inputSize[0], m_inputSize[1], m_inputSize[2] });
         mem->Allocate(m_openclWrapper->m_context);
         m_src.push_back(mem);
     }
@@ -96,8 +95,8 @@ void BatchNormalization::CreateBuffers(const std::vector<std::shared_ptr<DataCon
 
     if (m_dest.empty())
     {
-        auto mem = std::make_shared<DataContainerOpenCLFloat>(
-            std::vector{ m_inputSize[0], m_inputSize[1], m_inputSize[2] });
+        auto mem =
+            std::make_shared<DataContainerOpenCLFloat>(std::vector{ m_inputSize[0], m_inputSize[1], m_inputSize[2] });
         mem->Allocate(m_openclWrapper->m_context);
         m_dest.push_back(mem);
     }

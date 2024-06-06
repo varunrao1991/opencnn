@@ -34,7 +34,6 @@ void BatchNormalization1::SetParameters(const std::vector<std::string> &elements
             parameters[numCount++] = std::atoi(elements[i].c_str());
         }
         std::copy(parameters.begin(), parameters.end(), m_inputSize);
-        //ALOG_GPUML("BatchNormalization1 Input size [%d, %d, %d]", m_inputSize[0], m_inputSize[1], m_inputSize[2]);
     }
 }
 

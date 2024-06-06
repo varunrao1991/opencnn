@@ -42,7 +42,7 @@ void Add::SetKernelArguments()
     int argCnt = 0;
     m_dimension = 2;
     m_globalSize[0] = m_inputSize[0] * m_inputSize[1];
-    m_globalSize[1] = m_inputSize[2] / 4;
+    m_globalSize[1] = (m_inputSize[2] + 15) / 16;
     if (m_src.size() != 2)
     {
         ALOG_GPUML("Add : No src memory is created. Failed to set kernel arguments");
@@ -66,20 +66,19 @@ void Add::CreateBuffers(const std::vector<std::shared_ptr<DataContainerOpenCLFlo
     m_src = src;
     if (m_src.empty())
     {
-        auto mem = std::make_shared<DataContainerOpenCLFloat>(
-            std::vector{ m_inputSize[0], m_inputSize[1], m_inputSize[2] });
+        auto mem =
+            std::make_shared<DataContainerOpenCLFloat>(std::vector{ m_inputSize[0], m_inputSize[1], m_inputSize[2] });
         mem->Allocate(m_openclWrapper->m_context);
         m_src.push_back(mem);
 
-        mem = std::make_shared<DataContainerOpenCLFloat>(
-            std::vector{ m_inputSize[0], m_inputSize[1], m_inputSize[2] });
+        mem = std::make_shared<DataContainerOpenCLFloat>(std::vector{ m_inputSize[0], m_inputSize[1], m_inputSize[2] });
         mem->Allocate(m_openclWrapper->m_context);
         m_src.push_back(mem);
     }
     if (m_dest.empty())
     {
-        auto mem = std::make_shared<DataContainerOpenCLFloat>(
-            std::vector{ m_inputSize[0], m_inputSize[1], m_inputSize[2] });
+        auto mem =
+            std::make_shared<DataContainerOpenCLFloat>(std::vector{ m_inputSize[0], m_inputSize[1], m_inputSize[2] });
         mem->Allocate(m_openclWrapper->m_context);
         m_dest.push_back(mem);
     }

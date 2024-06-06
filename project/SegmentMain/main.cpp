@@ -105,8 +105,12 @@ int main(int argc, char *argv[])
             outputDimension1[2]);
 
         auto start = std::chrono::high_resolution_clock::now();
-
-        graph->Run(dataInput.data());
+        uint32_t kTotalCount{ 60 };
+        for (size_t runs = 0; runs < kTotalCount; runs++)
+        {
+            graph->Run(dataInput.data());
+        }
+        auto end = std::chrono::high_resolution_clock::now();
         graph->CopyData(dataOutput.data());
 
         if (outputDimensions.size() == 3)
@@ -148,10 +152,8 @@ int main(int argc, char *argv[])
             }
         }
 
-        auto end = std::chrono::high_resolution_clock::now();
         auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
-        std::cout << "Elapsed time: " << duration.count() << " milliseconds" << std::endl;
-        std::cout << "Execution frequency: " << 1000.0f / duration.count() << " frames/sec" << std::endl;
+        std::cout << "Elapsed time: " << duration.count() / kTotalCount << " milliseconds" << std::endl;
 
         if (false)
         {

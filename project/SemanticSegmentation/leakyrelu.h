@@ -16,7 +16,6 @@ class LeakyRelu : public Layer
 
   protected:
     uint32_t m_inputSize[3];
-    uint32_t m_outElements;
     float m_leakValue;
 
     void SetLeakValue(float);
