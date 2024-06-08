@@ -1,34 +1,24 @@
-#pragma OPENCL EXTENSION cl_khr_fp16 : enable
-
-__kernel void batchnormalization(  
-    __global const float* bias,
-    __global const float* gamma,
-    __global const float* input,
-    __global float* output,
-    const int input_width,
-    const int input_height,
-    const int channels
+__kernel void leakyrelu(
+    __global float* src,
+    __global float* dst,
+    __const int p,  // width
+    __const int q,  // height
+    __const int m,  // channels
+	__const float leakyValue
 ) {
-    const int ix = get_global_id(0);
-    const int iy = get_global_id(1);
-    const int iz = get_global_id(2);
+    const int ixy = get_global_id(0); // goes up to pq
+    const int iz = get_global_id(1) * 16; // goes up to (m + 15) / 16
 
-    const int input_idx = ix * input_height * channels + iy * channels;
+    int base_index = ixy * m + iz;
 
-    if (iz + 15 < channels) {
-        float16 valueIn = vload16(iz, input + input_idx);
-        valueIn *= vload16(iz, gamma);
-        valueIn += vload16(iz, bias);
-
-        int output_index = ix * channels * input_height + channels * iy;
-        vstore16(valueIn, iz, output + output_index);
+    if (iz + 15 < m) {
+        float16 src_val = vload16(0, src + base_index);
+        float16 result = max(leakyValue * src_val, src_val);
+        vstore16(result, 0, dst + base_index);
     } else {
-        for (int offset = iz; offset < channels; ++offset) {
-            int output_idx = input_idx + offset;
-            float value = input[output_idx];
-            value *= gamma[offset];
-            value += bias[offset];
-            output[output_idx] = value;
+        for (int offset = 0; offset < 16 && (iz + offset) < m; ++offset) {
+            float src_val = src[base_index + offset];
+            dst[base_index + offset] =  max(leakyValue * src_val, src_val);
         }
     }
 }
