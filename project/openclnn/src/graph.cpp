@@ -21,15 +21,14 @@
 #include <thread>
 #include <vector>
 
-Graph::Graph(const std::string &graphName, const std::filesystem::path &baseFolder) :
-    m_graphFileName{ graphName },
+Graph::Graph(const std::filesystem::path &kernelsFolderPath, const std::filesystem::path &modelPath, const std::filesystem::path &outputDirectory) :
     m_outWidth{ 0 },
     m_outHeight{ 0 },
-    m_globalContext{ std::make_shared<GlobalContext>(baseFolder) },
+    m_globalContext{ std::make_shared<GlobalContext>(kernelsFolderPath, modelPath, outputDirectory) },
     m_openclWrapper{ std::make_shared<OpenclWrapper>() },
     m_layerContext{ std::make_shared<LayerContext>(m_globalContext, m_openclWrapper) }
 {
-    ALOG_GPUML("Graph created : %s", m_graphFileName.c_str());
+    ALOG_GPUML("Model folder : %s", m_modelPath.c_str());
     m_layerContext->Initialize();
 }
 
@@ -69,7 +68,7 @@ void Graph::SetKernels()
 
 void Graph::Initialize()
 {
-    std::filesystem::path graphFileName = m_globalContext->GetGraphPath() / m_graphFileName;
+    std::filesystem::path graphFileName = m_globalContext->GetGraphFile();
     ALOG_GPUML("Graph file is %s", graphFileName.string().c_str());
     std::ifstream myFile(graphFileName);
     if (myFile.is_open())
@@ -176,10 +175,10 @@ std::string removeFileExtension(const std::string &fileName)
 
 void Graph::LoadVariables()
 {
-    auto filename = m_globalContext->GetBasePath() / removeFileExtension(m_graphFileName);
+    auto modelPath = m_globalContext->GetModelPath();
     for (auto &item : m_layerMap)
     {
-        item.second->FillLayerConstants(filename);
+        item.second->FillLayerConstants(modelPath);
     }
 }
 

@@ -1,6 +1,6 @@
-#include "SemanticSegmentation/IGraph.h"
-#include "SemanticSegmentation/SemanticSegmentationAPI.h"
 #include "bmpreader.h"
+#include "openclnn/IGraph.h"
+#include "openclnn/openclnn.h"
 
 #include <array>
 #include <filesystem>
@@ -64,17 +64,24 @@ int main(int argc, char *argv[])
 {
     if (argc != 4)
     {
-        std::cerr << "Usage: " << argv[0] << " <path> <modelname> <inputBmp>\n";
+        std::cerr << "Usage: " << argv[0] << " <kernels> <model> <inputBmp>\n";
         return 1;
     }
 
-    std::string kModelName{ argv[2] };
+    const std::string kKernelsPath{ argv[1] };
+    std::filesystem::path kModelPath{ argv[2] };
     std::string kInputBmp{ argv[3] };
-    const std::string kBasePath{ argv[1] };
 
-    if (std::filesystem::exists(argv[1]) && !kModelName.empty())
+    std::filesystem::path kOutputPath{ "./tmp" };
+    if (!std::filesystem::exists(kOutputPath))
     {
-        auto graph = CreateGraph(kModelName + ".txt", kBasePath);
+        std::filesystem::create_directory(kOutputPath);
+    }
+
+
+    if (std::filesystem::exists(kKernelsPath) && std::filesystem::exists(kModelPath))
+    {
+        auto graph = CreateGraph(kKernelsPath, kModelPath, kOutputPath);
 
         graph->Initialize();
 
@@ -94,7 +101,7 @@ int main(int argc, char *argv[])
         std::vector<float> dataInput = std::vector<float>(inputElementsCount);
         std::vector<uint8_t> dataOutput = std::vector<uint8_t>(outputElementsCount);
 
-        auto fullPath = std::filesystem::path(kBasePath) / "inputs" / kInputBmp;
+        auto fullPath = kOutputPath / kInputBmp;
 
         fillData(fullPath.string(), dataInput.data(), inputDimension[0], inputDimension[1], inputDimension[2]);
         fillData(dataInput.data(),
@@ -157,7 +164,7 @@ int main(int argc, char *argv[])
 
         if (false)
         {
-            std::filesystem::path filename = std::filesystem::path(kBasePath) / "outputs" / "input.bmp";
+            std::filesystem::path filename = kOutputPath / "output.bmp";
             BmpFile bmp(filename.string());
             bmp.write_bitmap(dataInput.data(),
                 inputDimension[0],
@@ -176,7 +183,7 @@ int main(int argc, char *argv[])
         }
         if (true)
         {
-            std::filesystem::path filename = std::filesystem::path(argv[1]) / "outputs" / kInputBmp;
+            std::filesystem::path filename = kOutputPath / "output.bmp";
             BmpFile bmp(filename.string());
             if (outputDimension1[2] == 3)
             {

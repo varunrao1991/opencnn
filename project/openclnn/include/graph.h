@@ -1,7 +1,7 @@
 
 #pragma once
 #include "IGlobalContext.h"
-#include "IGraph.h"
+#include "openclnn/IGraph.h"
 #include "Layer.h"
 #include "LayerContext.h"
 #include "LinkedList.h"
@@ -15,7 +15,7 @@
 class Graph : public IGraph
 {
   public:
-    Graph(const std::string &graphName, const std::filesystem::path &baseFolder);
+    Graph(const std::filesystem::path &kernelsFolderPath, const std::filesystem::path &modelPath, const std::filesystem::path &outputDirectory);
     virtual ~Graph();
     bool GetDimension(std::vector<std::vector<uint32_t>> &) override;
     bool GetOutputType(std::vector<std::vector<uint32_t>> &dimentionOut, std::vector<uint32_t> &sizeOut) override;
@@ -36,7 +36,6 @@ class Graph : public IGraph
     void CreateBuffer(std::shared_ptr<LinkedList<Layer>> link);
     void Execute(std::shared_ptr<LinkedList<Layer>> node);
 
-    std::string m_graphFileName;
     std::shared_ptr<IGlobalContext> m_globalContext;
     std::shared_ptr<OpenclWrapper> m_openclWrapper;
     std::shared_ptr<LayerContext> m_layerContext;
