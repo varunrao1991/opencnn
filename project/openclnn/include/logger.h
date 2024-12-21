@@ -17,6 +17,7 @@ void checkError(cl_int clErrNum, cl_int clSuccess);
 const char *getErrorString(cl_int error);
 
 #define LOG_TAG_GPUML "ProjectLeap"
+#define ENABLE_MYAPP_LOG_GPUML
 
 #ifdef ENABLE_INC_TIMER_GPUML
 

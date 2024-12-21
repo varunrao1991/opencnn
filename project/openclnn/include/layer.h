@@ -26,7 +26,7 @@ class Layer
     virtual void SetKernelArguments() = 0;
     virtual const std::vector<std::string> &GetKernelNames() = 0;
 
-    const std::vector<std::shared_ptr<DataContainerOpenCLFloat>> &GetDestinationBuffers();
+    const std::shared_ptr<DataContainerOpenCLFloat> &GetDestinationBuffer();
 
     virtual void DisplayOutputBuffer();
     virtual void DisplayInputBuffer();
@@ -48,7 +48,7 @@ class Layer
     size_t m_globalSize[3];
     size_t m_globalOffset[3];
     uint32_t m_dimension;
-    std::vector<std::shared_ptr<DataContainerOpenCLFloat>> m_dest;
+    std::shared_ptr<DataContainerOpenCLFloat> m_dest;
     std::vector<std::shared_ptr<DataContainerOpenCLFloat>> m_src;
     std::vector<cl_kernel> m_kernels;
     std::shared_ptr<OpenclWrapper> m_openclWrapper;

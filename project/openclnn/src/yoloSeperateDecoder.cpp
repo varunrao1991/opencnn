@@ -1,6 +1,7 @@
 #include "yoloSeperateDecoder.h"
 #include "bmpreader.h"
 
+#include "Logger.h"
 #include "numpy.hpp"
 
 #include <array>
@@ -319,10 +320,12 @@ void YOLOSeperateDecoder::GetOutputTypeSizesInbyte(std::vector<uint32_t> &sizeOf
 void YOLOSeperateDecoder::CopyOutputBuffer(uint8_t *outBuffer, int32_t index)
 {
 #if 1
+    ALOG_GPUML("Entered copy output buffer");
+
     if (index == 0)
     {
         constexpr auto kWhiteColor = YOLOSeperateDecoder::RGB{ 255, 0, 255 };
-        PerformNMS(m_boxes, m_scores, m_categories, 0.1f, 0.3f);
+        PerformNMS(m_boxes, m_scores, m_categories, 0.1f, 0.1f);
 
         for (size_t boxIndex = 0; boxIndex < m_detectedCount; boxIndex++)
         {

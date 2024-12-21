@@ -49,13 +49,9 @@ void Relu::SetKernelArguments()
         ALOG_GPUML("Relu : No src memory is created. Failed to set kernel arguments");
         return;
     }
-    if (m_dest.size() != 1)
-    {
-        ALOG_GPUML("No dest memory is created. Failed to set kernel arguments");
-        return;
-    }
+
     clSetKernelArg(m_kernels[0], argCnt++, sizeof(cl_mem), &(m_src[0]->GetBuffer()));
-    clSetKernelArg(m_kernels[0], argCnt++, sizeof(cl_mem), &(m_dest[0]->GetBuffer()));
+    clSetKernelArg(m_kernels[0], argCnt++, sizeof(cl_mem), &(m_dest->GetBuffer()));
     clSetKernelArg(m_kernels[0], argCnt++, sizeof(uint32_t), &m_outElements);
     clSetKernelArg(m_kernels[0], argCnt++, sizeof(cl_float), &m_maxValue);
 }
@@ -69,11 +65,11 @@ void Relu::CreateBuffers(const std::vector<std::shared_ptr<DataContainerOpenCLFl
         mem->Allocate(m_openclWrapper->m_context);
         m_src.push_back(mem);
     }
-    if (m_dest.empty())
+    if (m_dest == nullptr)
     {
         auto mem = std::make_shared<DataContainerOpenCLFloat>(m_outElements);
         mem->Allocate(m_openclWrapper->m_context);
-        m_dest.push_back(mem);
+        m_dest = mem;
     }
 }
 

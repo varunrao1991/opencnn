@@ -28,7 +28,7 @@ Graph::Graph(const std::filesystem::path &kernelsFolderPath, const std::filesyst
     m_openclWrapper{ std::make_shared<OpenclWrapper>() },
     m_layerContext{ std::make_shared<LayerContext>(m_globalContext, m_openclWrapper) }
 {
-    ALOG_GPUML("Model folder : %s", m_modelPath.c_str());
+    ALOG_GPUML("Model folder : %s", modelPath.c_str());
     m_layerContext->Initialize();
 }
 
@@ -217,11 +217,8 @@ void Graph::CreateBuffer(std::shared_ptr<LinkedList<Layer>> link)
             {
                 CreateBuffer(inputLink);
             }
-            auto destinationBuffers = inputLink->GetEntity()->GetDestinationBuffers();
-            for (auto &destinationBuffer : destinationBuffers)
-            {
-                accumulatedDestinationBuffers.push_back(destinationBuffer);
-            }
+            auto &destinationBuffer = inputLink->GetEntity()->GetDestinationBuffer();
+            accumulatedDestinationBuffers.push_back(destinationBuffer);
         }
         //ALOG_GPUML("Creating the buffer for %s", link->GetEntity()->GetName().c_str());
         link->GetEntity()->CreateBuffers(accumulatedDestinationBuffers);
@@ -326,5 +323,4 @@ void Graph::CleanUp()
 Graph::~Graph()
 {
     m_layerContext->CleanUp();
-    ALOG_GPUML("Graph deleted : %s", m_graphFileName.c_str());
 }

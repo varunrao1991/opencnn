@@ -68,16 +68,12 @@ void ArgMax::SetKernelArguments()
         ALOG_GPUML("ArgMax : No src memory is created. Failed to set kernel arguments");
         return;
     }
-    if (m_dest.size() != 1)
-    {
-        ALOG_GPUML("No dest memory is created. Failed to set kernel arguments");
-        return;
-    }
+
     cl_int p = m_inputSize[0];
     cl_int q = m_inputSize[1];
     cl_int r = m_inputSize[2];
     clSetKernelArg(m_kernels[0], argCnt++, sizeof(cl_mem), &(m_src[0]->GetBuffer()));
-    clSetKernelArg(m_kernels[0], argCnt++, sizeof(cl_mem), &(m_dest[0]->GetBuffer()));
+    clSetKernelArg(m_kernels[0], argCnt++, sizeof(cl_mem), &(m_dest->GetBuffer()));
     clSetKernelArg(m_kernels[0], argCnt++, sizeof(cl_int), &p);
     clSetKernelArg(m_kernels[0], argCnt++, sizeof(cl_int), &q);
     clSetKernelArg(m_kernels[0], argCnt++, sizeof(cl_int), &r);
@@ -93,18 +89,18 @@ void ArgMax::CreateBuffers(const std::vector<std::shared_ptr<DataContainerOpenCL
         mem->Allocate(m_openclWrapper->m_context);
         m_src.push_back(mem);
     }
-    if (m_dest.empty())
+    if (m_dest == nullptr)
     {
         auto mem = std::make_shared<DataContainerOpenCLFloat>(std::vector{ m_inputSize[0], m_inputSize[1] });
         mem->Allocate(m_openclWrapper->m_context);
-        m_dest.push_back(mem);
+        m_dest = mem;
     }
 }
 
 void ArgMax::CopyOutputBuffer(uint8_t *outBuffer, int32_t)
 {
     clEnqueueReadBuffer(m_openclWrapper->m_commandQueue,
-        m_dest[0]->GetBuffer(),
+        m_dest->GetBuffer(),
         CL_TRUE,
         0,
         m_inputSize[0] * m_inputSize[1] * sizeof(uint8_t),

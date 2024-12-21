@@ -92,17 +92,13 @@ void ConvolutionLayerBias::SetKernelArguments()
         ALOG_GPUML("ConvolutionLayerBias : No src memory is created. Failed to set kernel arguments");
         return;
     }
-    if (m_dest.size() != 1)
-    {
-        ALOG_GPUML("No dest memory is created. Failed to set kernel arguments");
-        return;
-    }
+
     auto &kernel = m_enableTranspose ? m_kernels[1] : m_kernels[0];
 
     clSetKernelArg(kernel, argCnt++, sizeof(cl_mem), &(m_src[0]->GetBuffer()));
     clSetKernelArg(kernel, argCnt++, sizeof(cl_mem), &(m_src[1]->GetBuffer()));
     clSetKernelArg(kernel, argCnt++, sizeof(cl_mem), &(m_src[2]->GetBuffer()));
-    clSetKernelArg(kernel, argCnt++, sizeof(cl_mem), &(m_dest[0]->GetBuffer()));
+    clSetKernelArg(kernel, argCnt++, sizeof(cl_mem), &(m_dest->GetBuffer()));
     clSetKernelArg(kernel, argCnt++, sizeof(uint32_t), &m_inputSize[0]);
     clSetKernelArg(kernel, argCnt++, sizeof(uint32_t), &m_inputSize[1]);
     clSetKernelArg(kernel, argCnt++, sizeof(uint32_t), &m_filterSize[2]);
@@ -124,8 +120,7 @@ void ConvolutionLayerBias::CreateBuffers(const std::vector<std::shared_ptr<DataC
         mem = std::make_shared<DataContainerOpenCLFloat>(std::vector{ m_filterSize[3] });
         mem->Allocate(m_openclWrapper->m_context);
         m_src.push_back(mem);
-        mem = std::make_shared<DataContainerOpenCLFloat>(
-            std::vector{ m_inputSize[0], m_inputSize[1], m_inputSize[2] });
+        mem = std::make_shared<DataContainerOpenCLFloat>(std::vector{ m_inputSize[0], m_inputSize[1], m_inputSize[2] });
         mem->Allocate(m_openclWrapper->m_context);
         m_src.push_back(mem);
     }
@@ -143,12 +138,12 @@ void ConvolutionLayerBias::CreateBuffers(const std::vector<std::shared_ptr<DataC
     {
         ALOG_GPUML("Buffer passed is beyond the requirement");
     }
-    if (m_dest.empty())
+    if (m_dest == nullptr)
     {
         auto mem = std::make_shared<DataContainerOpenCLFloat>(
             std::vector{ m_outputSize[0], m_outputSize[1], m_outputSize[2] });
         mem->Allocate(m_openclWrapper->m_context);
-        m_dest.push_back(mem);
+        m_dest = mem;
     }
 }
 

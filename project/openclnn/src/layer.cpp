@@ -14,7 +14,8 @@ Layer::Layer(const std::string &name, std::shared_ptr<OpenclWrapper> openclWrapp
     m_globalOffset{},
     m_globalSize{},
     m_dimension{},
-    m_kernels{}
+    m_kernels{},
+    m_dest{nullptr}
 {
 }
 
@@ -25,7 +26,7 @@ void Layer::EnqueueKernel()
     ALOG_GPUML_CHECK_ERROR1(err, __LINE__, "clEnqueueNDRangeKernel");
 }
 
-const std::vector<std::shared_ptr<DataContainerOpenCLFloat>> &Layer::GetDestinationBuffers()
+const std::shared_ptr<DataContainerOpenCLFloat> &Layer::GetDestinationBuffer()
 {
     return m_dest;
 }
@@ -52,10 +53,7 @@ void Layer::DisplayInputBuffer()
 void Layer::DisplayOutputBuffer()
 {
     ALOG_GPUML("Writing output buffer");
-    for (const auto kData : m_dest)
-    {
-        kData->DisplyData(m_openclWrapper->m_commandQueue);
-    }
+    m_dest->DisplyData(m_openclWrapper->m_commandQueue);
 }
 
 Layer::~Layer()

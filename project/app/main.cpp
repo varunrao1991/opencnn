@@ -68,16 +68,15 @@ int main(int argc, char *argv[])
         return 1;
     }
 
-    const std::string kKernelsPath{ argv[1] };
-    std::filesystem::path kModelPath{ argv[2] };
-    std::string kInputBmp{ argv[3] };
+    const std::filesystem::path kKernelsPath{ argv[1] };
+    const std::filesystem::path kModelPath{ argv[2] };
+    const std::filesystem::path kInputBmp{ argv[3] };
 
     std::filesystem::path kOutputPath{ "./tmp" };
     if (!std::filesystem::exists(kOutputPath))
     {
         std::filesystem::create_directory(kOutputPath);
     }
-
 
     if (std::filesystem::exists(kKernelsPath) && std::filesystem::exists(kModelPath))
     {
@@ -101,9 +100,7 @@ int main(int argc, char *argv[])
         std::vector<float> dataInput = std::vector<float>(inputElementsCount);
         std::vector<uint8_t> dataOutput = std::vector<uint8_t>(outputElementsCount);
 
-        auto fullPath = kOutputPath / kInputBmp;
-
-        fillData(fullPath.string(), dataInput.data(), inputDimension[0], inputDimension[1], inputDimension[2]);
+        fillData(kInputBmp.string(), dataInput.data(), inputDimension[0], inputDimension[1], inputDimension[2]);
         fillData(dataInput.data(),
             dataOutput.data(),
             outputDimension1[0],
@@ -112,11 +109,7 @@ int main(int argc, char *argv[])
             outputDimension1[2]);
 
         auto start = std::chrono::high_resolution_clock::now();
-        uint32_t kTotalCount{ 60 };
-        for (size_t runs = 0; runs < kTotalCount; runs++)
-        {
-            graph->Run(dataInput.data());
-        }
+        graph->Run(dataInput.data());
         auto end = std::chrono::high_resolution_clock::now();
         graph->CopyData(dataOutput.data());
 
@@ -160,11 +153,11 @@ int main(int argc, char *argv[])
         }
 
         auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
-        std::cout << "Elapsed time: " << duration.count() / kTotalCount << " milliseconds" << std::endl;
+        std::cout << "Elapsed time: " << duration.count() << " milliseconds" << std::endl;
 
-        if (false)
+        if (true)
         {
-            std::filesystem::path filename = kOutputPath / "output.bmp";
+            std::filesystem::path filename = kOutputPath / "input.bmp";
             BmpFile bmp(filename.string());
             bmp.write_bitmap(dataInput.data(),
                 inputDimension[0],

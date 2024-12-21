@@ -73,11 +73,7 @@ void Softmax::SetKernelArguments()
         ALOG_GPUML("Softmax : No src memory is created. Failed to set kernel arguments");
         return;
     }
-    if (m_dest.size() != 1)
-    {
-        ALOG_GPUML("No dest memory is created. Failed to set kernel arguments");
-        return;
-    }
+
     int argCnt = 0;
     clSetKernelArg(m_kernels[0], argCnt++, sizeof(cl_mem), &(m_src[0]->GetBuffer()));
     clSetKernelArg(m_kernels[0], argCnt++, sizeof(cl_mem), &(m_intermediateMemory->GetBuffer()));
@@ -86,7 +82,7 @@ void Softmax::SetKernelArguments()
     argCnt = 0;
     clSetKernelArg(m_kernels[1], argCnt++, sizeof(cl_mem), &(m_src[0]->GetBuffer()));
     clSetKernelArg(m_kernels[1], argCnt++, sizeof(cl_mem), &(m_intermediateMemory->GetBuffer()));
-    clSetKernelArg(m_kernels[1], argCnt++, sizeof(cl_mem), &(m_dest[0]->GetBuffer()));
+    clSetKernelArg(m_kernels[1], argCnt++, sizeof(cl_mem), &(m_dest->GetBuffer()));
     clSetKernelArg(m_kernels[1], argCnt++, sizeof(uint32_t), &m_inputSize[2]);
 }
 
@@ -100,12 +96,12 @@ void Softmax::CreateBuffers(const std::vector<std::shared_ptr<DataContainerOpenC
         mem->Allocate(m_openclWrapper->m_context);
         m_src.push_back(mem);
     }
-    if (m_dest.empty())
+    if (m_dest == nullptr)
     {
         auto mem =
             std::make_shared<DataContainerOpenCLFloat>(std::vector{ m_inputSize[0], m_inputSize[1], m_inputSize[2] });
         mem->Allocate(m_openclWrapper->m_context);
-        m_dest.push_back(mem);
+        m_dest = mem;
     }
 
     m_intermediateMemory = std::make_shared<DataContainerOpenCLFloat>(std::vector{ m_inputSize[0], m_inputSize[1] });

@@ -80,15 +80,11 @@ void PointwiseConvolutionLayerBias::SetKernelArguments()
         ALOG_GPUML("PointwiseConvolutionLayerBias : No src memory is created. Failed to set kernel arguments");
         return;
     }
-    if (m_dest.size() != 1)
-    {
-        ALOG_GPUML("No dest memory is created. Failed to set kernel arguments");
-        return;
-    }
+
     clSetKernelArg(m_kernels[m_useEven], argCnt++, sizeof(cl_mem), &(m_src[0]->GetBuffer()));
     clSetKernelArg(m_kernels[m_useEven], argCnt++, sizeof(cl_mem), &(m_src[1]->GetBuffer()));
     clSetKernelArg(m_kernels[m_useEven], argCnt++, sizeof(cl_mem), &(m_src[2]->GetBuffer()));
-    clSetKernelArg(m_kernels[m_useEven], argCnt++, sizeof(cl_mem), &(m_dest[0]->GetBuffer()));
+    clSetKernelArg(m_kernels[m_useEven], argCnt++, sizeof(cl_mem), &(m_dest->GetBuffer()));
     clSetKernelArg(m_kernels[m_useEven], argCnt++, sizeof(uint32_t), &m_inputSize[0]);
     clSetKernelArg(m_kernels[m_useEven], argCnt++, sizeof(uint32_t), &m_inputSize[1]);
     clSetKernelArg(m_kernels[m_useEven], argCnt++, sizeof(uint32_t), &m_filterSize[0]);
@@ -126,12 +122,12 @@ void PointwiseConvolutionLayerBias::CreateBuffers(const std::vector<std::shared_
     {
         ALOG_GPUML("Buffer passed is beyond the requirement");
     }
-    if (m_dest.empty())
+    if (m_dest == nullptr)
     {
         auto mem = std::make_shared<DataContainerOpenCLFloat>(
             std::vector{ m_inputSize[0], m_inputSize[1], m_filterSize[1] });
         mem->Allocate(m_openclWrapper->m_context);
-        m_dest.push_back(mem);
+        m_dest = mem;
     }
 }
 

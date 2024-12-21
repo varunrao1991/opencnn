@@ -40,13 +40,9 @@ void SigmoidLayer::SetKernelArguments()
         ALOG_GPUML("SigmoidLayer: No src memory is created. Failed to set kernel arguments");
         return;
     }
-    if (m_dest.size() != 1)
-    {
-        ALOG_GPUML("No dest memory is created. Failed to set kernel arguments");
-        return;
-    }
+
     clSetKernelArg(m_kernels[0], argCnt++, sizeof(cl_mem), &(m_src[0]->GetBuffer()));
-    clSetKernelArg(m_kernels[0], argCnt++, sizeof(cl_mem), &(m_dest[0]->GetBuffer()));
+    clSetKernelArg(m_kernels[0], argCnt++, sizeof(cl_mem), &(m_dest->GetBuffer()));
     clSetKernelArg(m_kernels[0], argCnt++, sizeof(uint32_t), &m_outElements);
 }
 
@@ -59,11 +55,11 @@ void SigmoidLayer::CreateBuffers(const std::vector<std::shared_ptr<DataContainer
         mem->Allocate(m_openclWrapper->m_context);
         m_src.push_back(mem);
     }
-    if (m_dest.empty())
+    if (m_dest == nullptr)
     {
         auto mem = std::make_shared<DataContainerOpenCLFloat>(m_outElements);
         mem->Allocate(m_openclWrapper->m_context);
-        m_dest.push_back(mem);
+        m_dest = mem;
     }
 }
 

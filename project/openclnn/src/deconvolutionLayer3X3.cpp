@@ -54,14 +54,10 @@ void DeconvolutionLayer3X3::SetKernelArguments()
         ALOG_GPUML("DeconvolutionLayer3X3 : No src memory is created. Failed to set kernel arguments");
         return;
     }
-    if (m_dest.size() != 1)
-    {
-        ALOG_GPUML("No dest memory is created. Failed to set kernel arguments");
-        return;
-    }
+
     clSetKernelArg(m_kernels[0], argCnt++, sizeof(cl_mem), &(m_src[0]->GetBuffer()));
     clSetKernelArg(m_kernels[0], argCnt++, sizeof(cl_mem), &(m_src[1]->GetBuffer()));
-    clSetKernelArg(m_kernels[0], argCnt++, sizeof(cl_mem), &(m_dest[0]->GetBuffer()));
+    clSetKernelArg(m_kernels[0], argCnt++, sizeof(cl_mem), &(m_dest->GetBuffer()));
     clSetKernelArg(m_kernels[0], argCnt++, sizeof(uint32_t), &m_inputSize[0]);
     clSetKernelArg(m_kernels[0], argCnt++, sizeof(uint32_t), &m_inputSize[1]);
     clSetKernelArg(m_kernels[0], argCnt++, sizeof(uint32_t), &m_inputSize[2]);
@@ -94,12 +90,12 @@ void DeconvolutionLayer3X3::CreateBuffers(const std::vector<std::shared_ptr<Data
         ALOG_GPUML("Buffer passed is beyond the requirement");
     }
 
-    if (m_dest.empty())
+    if (m_dest == nullptr)
     {
         auto mem = std::make_shared<DataContainerOpenCLFloat>(
             std::vector{ 2 * m_inputSize[0], 2 * m_inputSize[1], m_filterSize[3] });
         mem->Allocate(m_openclWrapper->m_context);
-        m_dest.push_back(mem);
+        m_dest = mem;
     }
 }
 
@@ -107,21 +103,21 @@ void DeconvolutionLayer3X3::FillLayerInputFromFile(const std::filesystem::path &
 {
     auto fullPath = inputPath / (m_name + "filter.npy");
     m_src[0]->LoadFromFile(fullPath, m_openclWrapper->m_commandQueue);
-    m_dest[0]->ResetData(m_openclWrapper->m_commandQueue);
+    m_dest->ResetData(m_openclWrapper->m_commandQueue);
 }
 
 void DeconvolutionLayer3X3::FillLayerConstants(const std::filesystem::path &inputPath)
 {
     auto fullPath = inputPath / (m_name + "_weights.npy");
     m_src[0]->LoadFromFile(fullPath, m_openclWrapper->m_commandQueue);
-    m_dest[0]->ResetData(m_openclWrapper->m_commandQueue);
+    m_dest->ResetData(m_openclWrapper->m_commandQueue);
 }
 
 void DeconvolutionLayer3X3::EnqueueKernel()
 {
     if (m_cpuMem)
     {
-        m_dest[0]->FillData(m_openclWrapper->m_commandQueue, m_cpuMem.get());
+        m_dest->FillData(m_openclWrapper->m_commandQueue, m_cpuMem.get());
     }
     m_runCount = 0;
     for (int i = 0; i < 4; i++)

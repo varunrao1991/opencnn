@@ -48,14 +48,10 @@ void PaddingLayer::SetKernelArguments()
         ALOG_GPUML("PaddingLayer : No src memory is created. Failed to set kernel arguments");
         return;
     }
-    if (m_dest.size() != 1)
-    {
-        ALOG_GPUML("No dest memory is created. Failed to set kernel arguments");
-        return;
-    }
+
 
     clSetKernelArg(m_kernels[0], argCnt++, sizeof(cl_mem), &(m_src[0]->GetBuffer()));
-    clSetKernelArg(m_kernels[0], argCnt++, sizeof(cl_mem), &(m_dest[0]->GetBuffer()));
+    clSetKernelArg(m_kernels[0], argCnt++, sizeof(cl_mem), &(m_dest->GetBuffer()));
     clSetKernelArg(m_kernels[0], argCnt++, sizeof(uint32_t), &m_inputSize[0]);
     clSetKernelArg(m_kernels[0], argCnt++, sizeof(uint32_t), &m_inputSize[1]);
     clSetKernelArg(m_kernels[0], argCnt++, sizeof(uint32_t), &m_inputSize[2]);
@@ -87,12 +83,12 @@ void PaddingLayer::CreateBuffers(const std::vector<std::shared_ptr<DataContainer
     {
         ALOG_GPUML("[PaddingLayer] Buffer passed is beyond the requirement");
     }
-    if (m_dest.empty())
+    if (m_dest == nullptr)
     {
         auto mem = std::make_shared<DataContainerOpenCLFloat>(
             std::vector{ m_outputSize[0], m_outputSize[1], m_outputSize[2] });
         mem->Allocate(m_openclWrapper->m_context);
-        m_dest.push_back(mem);
+        m_dest = mem;
     }
 }
 
@@ -105,7 +101,7 @@ void PaddingLayer::FillLayerInputFromFile(const std::filesystem::path &inputPath
 void PaddingLayer::writeOutputBuffers(const std::filesystem::path &outputPath)
 {
     auto fileName = outputPath / (m_name + "_out.bin");
-    m_dest[0]->ExportDataInBin(fileName, m_openclWrapper->m_commandQueue);
+    m_dest->ExportDataInBin(fileName, m_openclWrapper->m_commandQueue);
 }
 
 PaddingLayer::~PaddingLayer() {}
